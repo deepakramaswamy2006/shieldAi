@@ -23,7 +23,7 @@ export default function Register() {
     console.log("Sending data:", form);
 
     const res = await axios.post(
-      "http://localhost:8000/api/auth/register",
+      `${BASE_URL}/auth/register`,
       form
     );
 

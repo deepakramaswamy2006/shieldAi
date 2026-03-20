@@ -1,20 +1,20 @@
 const express = require("express");
-const mongoose = require("mongoose");
 const cors = require("cors");
 const adminRoutes = require("./routes/adminRoutes");
+const authRoutes = require("./routes/authRoutes");
+const connectDB = require("./lib/db");
 require("dotenv").config();
 
 const app = express();
-const authRoutes = require("./routes/authRoutes");
 
 // ✅ CORS — allow localhost (dev) and any Vercel deployment (prod)
 const corsOptions = {
   origin: function (origin, callback) {
     const allowed = [
       "http://localhost:5173",
-      /\.vercel\.app$/,  // allows any *.vercel.app domain
+      /\.vercel\.app$/,
     ];
-    if (!origin) return callback(null, true); // allow non-browser requests
+    if (!origin) return callback(null, true);
     const isAllowed = allowed.some((o) =>
       typeof o === "string" ? o === origin : o.test(origin)
     );
@@ -27,18 +27,22 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
+// ✅ Connect to MongoDB on every request (cached for serverless)
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    res.status(500).json({ error: "Database connection failed" });
+  }
+});
+
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
 
-// Test route
 app.get("/", (req, res) => {
   res.send("ShieldAI Backend Running");
 });
-
-// MongoDB connection
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log("MongoDB Connected"))
-  .catch((err) => console.log(err));
 
 // ✅ Export for Vercel serverless; only listen when run locally
 module.exports = app;

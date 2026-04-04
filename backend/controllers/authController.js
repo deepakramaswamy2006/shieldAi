@@ -4,11 +4,12 @@ const Admin = require("../models/Admin");
 // REGISTER WORKER
 exports.register = async (req, res) => {
   try {
-    const { name, mobile, city, platform, password } = req.body;
+    const { name, mobile, userId, city, platform, password } = req.body;
 
     const worker = new Worker({
       name,
       mobile,
+      userId,
       city,
       platform,
       password,
@@ -25,9 +26,9 @@ exports.register = async (req, res) => {
 // WORKER LOGIN
 exports.login = async (req, res) => {
   try {
-    const { mobile, password } = req.body;
+    const { userId, password } = req.body;
 
-    const worker = await Worker.findOne({ mobile, password });
+    const worker = await Worker.findOne({ userId, password });
 
     if (!worker) {
       return res.status(400).json({ message: "Invalid credentials" });

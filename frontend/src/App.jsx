@@ -6,7 +6,8 @@ import AdminDashboard from "./pages/AdminDashboard";
 import Profile from "./pages/Profile";
 import Claims from "./pages/Claims";
 import BuyInsurance from "./pages/BuyInsurance";
-
+import TrustAnalysis from "./pages/TrustAnalysis";
+import Payment from "./pages/Payment";
 
 function App() {
   return (
@@ -19,6 +20,8 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/claims" element={<Claims />} />
         <Route path="/buy-insurance" element={<BuyInsurance />} />
+        <Route path="/payment" element={<Payment />} />
+        <Route path="/trust-analysis" element={<TrustAnalysis />} />
       </Routes>
     </BrowserRouter>
   );
